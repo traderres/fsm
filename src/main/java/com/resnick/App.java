@@ -14,7 +14,7 @@ public class App
     public static void main( String[] args ) {
         logger.debug("main() started");
 
-        StateInput in = new StateInput("a23bbc");
+        StateInput in = new StateInput("aabbc");
 
         State s = States.Init;
         while ((s != null) && (s != States.Fail))
