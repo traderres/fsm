@@ -18,21 +18,54 @@ public class App
         StateInput stateInput = new StateInput(Permission.GUEST, StateAction.REPORT_ADDED);
 
         State s = States.INIT;
-        while ((s != States.COMPLETE) && (s != States.FAIL))
-        {
-            s = s.next(stateInput);
-            logger.debug("new state = {}", s);
-        }
 
-        if (s == null)
-        {
-            logger.debug("Valid!");
-        }
-        else
-        {
-            logger.debug("Failed");
-        }
+        // Advancing from Init -> ANALYST_REVIEWS_REPORT
+        s = s.next(stateInput);
+        endOnStateIsFailOrComplete(s);
 
+        // Advancing from ANALYST_REVIEWS_REPORT -> REVIEW_INDICATORS
+        stateInput.setAction(StateAction.COUNTERMASURER_EXPEDITED);
+        s = s.next(stateInput);
+        endOnStateIsFailOrComplete(s);
+
+        // Advancing from REVIEW_INDICATORS -> SELECT_TOOL
+        stateInput.setAction(StateAction.YES_COUNTERMEASURE_RECOMMENDED);
+        s = s.next(stateInput);
+        endOnStateIsFailOrComplete(s);
+
+
+        // Advancing from SELECT_TOOL -> WCF_SME_REVIEW
+        stateInput.setAction(StateAction.WCF_TOOL_SELECTED);
+        s = s.next(stateInput);
+        endOnStateIsFailOrComplete(s);
+
+        // Advancing from SELECT_TOOL -> WCF_SME_REVIEW
+        stateInput.setAction(StateAction.WCF_TOOL_SELECTED);
+        s = s.next(stateInput);
+        endOnStateIsFailOrComplete(s);
+
+        // Advancing from WCF_SME_REVIEW -> WCF_SME_REVIEW
+        s = s.next(stateInput);
+        endOnStateIsFailOrComplete(s);
 
     }
+
+
+    private static void endOnStateIsFailOrComplete(State aState)
+    {
+        String sStateName = aState.toString();
+        if (sStateName.equalsIgnoreCase("FAIL"))
+        {
+            logger.error("State is FAIL.  Stopping here.");
+            System.exit(1);
+        }
+        else if (sStateName.equalsIgnoreCase("COMPLETE"))
+        {
+            logger.info("State is COMPLETE.  Stopping here.");
+            System.exit(0);
+        }
+    }
+
+
 }
+
