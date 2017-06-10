@@ -1,4 +1,4 @@
-package com.resnick;
+package com.stuff;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

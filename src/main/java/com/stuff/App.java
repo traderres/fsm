@@ -1,4 +1,4 @@
-package com.resnick;
+package com.stuff;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,15 +11,16 @@ public class App
 {
     private static final Logger logger = LoggerFactory.getLogger(App.class);
 
-    public static void main( String[] args ) {
+    public static void main( String[] args )
+    {
         logger.debug("main() started");
 
-        StateInput in = new StateInput("aabbc");
+        StateInput stateInput = new StateInput(Permission.GUEST, StateAction.REPORT_ADDED);
 
-        State s = States.Init;
-        while ((s != null) && (s != States.Fail))
+        State s = States.INIT;
+        while ((s != States.COMPLETE) && (s != States.FAIL))
         {
-            s = s.next(in);
+            s = s.next(stateInput);
             logger.debug("new state = {}", s);
         }
 
